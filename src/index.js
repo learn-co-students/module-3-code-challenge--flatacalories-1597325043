@@ -4,6 +4,7 @@ let namePar = document.querySelector('#name')
 let imgTag = document.querySelector('#image')
 let calorieSpan = document.querySelector('#calories')
 let calForm = document.querySelector('#calories-form')
+let resetButton = document.querySelector('#reset-btn')
 
 // fetch all character array from api
 fetch("http://localhost:3000/characters")
@@ -22,15 +23,17 @@ let renderCharacter = (charObj) => {
             charBar.append(newSpan)
 
     //When Span button is clicked it shows characters info in detailed info
+    // Start a new calories form
     newSpan.addEventListener('click', (evt) => {
         namePar.innerText = charObj.name
         imgTag.src = charObj.image
         calorieSpan.innerText = charObj.calories
         addCalories()
+        resetCalories()
     })
     
    
-
+// function to add new calories to character api and Dom
     function addCalories() {
 
         calForm.addEventListener('submit', (evt) => {
@@ -51,10 +54,32 @@ let renderCharacter = (charObj) => {
                     calories: newCals
                 })
             })
-            .then(res => res.json())
-            .then(updatedCals => 
-            calorieSpan.innerText = updatedCals.calories
+                .then(res => res.json())
+                .then(updatedCals => 
+                calorieSpan.innerText = updatedCals.calories
                 )
+        })
+    }
+
+
+    function resetCalories() {
+        resetButton.addEventListener('click', (evt) => {
+            console.log('inside reset')
+
+            fetch(`http://localhost:3000/characters/${charObj.id}`, {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    calories: 0
+                })
+            })
+                .then(res => res.json())
+                .then(noCals => 
+                calorieSpan.innerText = noCals.calories
+                )
+            
         })
     }
 }
