@@ -1,0 +1,64 @@
+const characterBar = document.querySelector("div#character-bar");
+
+const characterInfoDiv = document.querySelector("div#detailed-Info");
+
+    const charPTag = document.querySelector("p#name");
+    const charImgTag = document.querySelector("img#image");
+    
+    const charSpanTag = document.querySelector("span#calories");
+
+const charForm = document.querySelector("form#calories-form");
+    const formInput = document.querySelector("input#characterId");
+    const userInput = document.querySelector("input").nextElementSibling
+        userInput.name = "calorie"
+       
+recieveCharacters()
+
+function recieveCharacters(){
+    fetch('http://localhost:3000/characters')
+        .then(response => response.json())
+        .then((characters) => {
+            characters.forEach((character) => {
+                renderCharacter(character)
+            })
+            renderCharInfo(characters[0])
+        })
+} 
+
+function renderCharacter(obj){
+
+    const charSpan = document.createElement("span")
+        charSpan.innerText = obj.name
+
+    characterBar.append(charSpan)
+
+    charSpan.addEventListener("click", function(evt) {
+        console.log(this);
+      renderCharInfo(obj)
+    })
+}
+
+function renderCharInfo(charObj){
+    charPTag.innerText = charObj.name
+    charImgTag.src = charObj.image
+    charSpanTag.innerText = charObj.calories
+    formInput.value = charObj.id
+}
+
+charForm.addEventListener("submit",function(evt){
+    evt.preventDefault()
+    // console.log(this.userInput.value);
+    let calInput = this.calorie.value
+    let charId = this.characterId.value
+    fetch(`http://localhost:3000/characters/${charId}`, {
+        method: 'PATCH',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify ({
+            calories: calInput
+        })
+    })
+    .then(response => response.json())
+    .then((updatedChar) => {
+        renderCharInfo(updatedChar);
+    })
+})
