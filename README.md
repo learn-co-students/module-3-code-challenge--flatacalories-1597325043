@@ -36,12 +36,12 @@ As a user, I can:
 
 These deliverables are not required to pass the code challenge, but if you have the extra time, or even after the code challenge, they are a great way to stretch your skills. Consider refactoring your current code before moving on.
 
-> Note: If you are going to attempt these advanced deliverables, please be sure to have a working commit with all the Core Deliverables first!
+<!-- > Note: If you are going to attempt these advanced deliverables, please be sure to have a working commit with all the Core Deliverables first! -->
 
 As a user, I can:
-- Clicks on a `Reset Calories` button to set calories to `0`. Persist calories value to the server and update the DOM.
-- Change character's name
-- Add a new character
+<!-- - Clicks on a `Reset Calories` button to set calories to `0`. Persist calories value to the server and update the DOM. -->
+<!-- - Change character's name -->
+<!-- - Add a new character -->
 
 ## Rubric
 
