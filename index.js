@@ -38,7 +38,7 @@ turnCharacterIntoHTML = (singleCharacter) =>{
     //Clicks on "Add Calories" button to add calories to a Character.
     //Persist calories value to the server and update the DOM.
 
-
+//the below is not complete...
     characterCalories.addEventListener("submit", (evt) =>{
       charactersIdForCalories.innerHTML = singleCharacter.id
       let enteredCalorie = document.querySelector("#enteredCalories")
