@@ -4,7 +4,35 @@ const characterInfoName = document.querySelector("p#name")
 const characterInfoImage = document.querySelector("#image")
 const characterInfoCalories = document.querySelector("#calories")
 const characterInfoCaloriesForm = document.querySelector("#calories-form")
+const characterInfoCharacterId = document.querySelector("#characterId")
 const characterInfoCaloriesFormInput = characterInfoCaloriesForm.querySelector('input[type="text"]')
+const characterResetCaloriesButton = document.querySelector("#reset-btn")
+
+characterResetCaloriesButton.addEventListener("click", (evt) => {
+
+  const options = {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ calories: 0 })
+  }
+
+  fetch(`http://localhost:3000/characters/${characterInfoCharacterId.value}`, options)
+    .then(res => res.json())
+    .then(updatedCharacter => {
+      characterInfoCalories.innerText = updatedCharacter.calories
+      characterInfoCaloriesForm.reset()
+      characterBar.innerHTML = ""
+      fetch("http://localhost:3000/characters")
+        .then(res => res.json())
+        .then(characterArray => {
+          characterArray.forEach(character => {
+            addCharacterToBar(character)
+          });
+        })
+    })
+})
 
 fetch("http://localhost:3000/characters")
   .then(res => res.json())
@@ -25,33 +53,38 @@ const addCharacterToBar = (character) => {
 }
 
 const updateCharacterInfo = (character) => {
-
   characterInfoName.innerText = character.name
   characterInfoImage.src = character.image
   characterInfoCalories.innerText = character.calories
-
-  characterInfoCaloriesForm.addEventListener("submit", (evt) => {
-
-    evt.preventDefault()
-
-    const caloriesInput = parseInt(characterInfoCaloriesFormInput.value) + character.calories
-    evt.target.elements.characterId.value = character.id
-
-    const options = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ calories: caloriesInput })
-    }
-
-    fetch(`http://localhost:3000/characters/${character.id}`, options)
-      .then(res => res.json())
-      .then(updatedCharacter => {
-        // console.log(updatedCharacter)
-        character.calories = updatedCharacter.calories
-        characterInfoCalories.innerText = updatedCharacter.calories
-        characterInfoCaloriesForm.reset()
-      });
-  })
+  characterInfoCharacterId.value = character.id
 }
+
+characterInfoCaloriesForm.addEventListener("submit", (evt) => {
+
+  evt.preventDefault()
+
+  const caloriesInput = parseInt(characterInfoCaloriesFormInput.value) + parseInt(characterInfoCalories.innerText)
+
+  const options = {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ calories: caloriesInput })
+  }
+
+  fetch(`http://localhost:3000/characters/${characterInfoCharacterId.value}`, options)
+    .then(res => res.json())
+    .then(updatedCharacter => {
+      characterInfoCalories.innerText = updatedCharacter.calories
+      characterInfoCaloriesForm.reset()
+      characterBar.innerHTML = ""
+      fetch("http://localhost:3000/characters")
+        .then(res => res.json())
+        .then(characterArray => {
+          characterArray.forEach(character => {
+            addCharacterToBar(character)
+          });
+        })
+    })
+})
