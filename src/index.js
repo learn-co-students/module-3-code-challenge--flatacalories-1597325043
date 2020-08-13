@@ -1,11 +1,13 @@
 const charactersDiv = document.querySelector("div#character-bar");
 const mainCharacterShow = document.querySelector("div#detailed-info");
 const caloriesForm = document.querySelector("form#calories-form");
+const resetButton = document.querySelector("#reset-btn");
 
 fetch("http://localhost:3000/characters")
   .then((response) => response.json())
   .then((charactersData) => {
     charactersData.forEach((characterObj) => characterToDOM(characterObj));
+    charactersData[0];
   });
 
 const characterToDOM = (characterObj) => {
@@ -16,8 +18,7 @@ const characterToDOM = (characterObj) => {
   characterSpan.addEventListener("click", (evt) => {
     const charName = mainCharacterShow.querySelector("p#name");
     const charImage = mainCharacterShow.querySelector("img#image");
-    const charCalories = mainCharacterShow.querySelector("h4")
-      .firstElementChild;
+    const charCalories = mainCharacterShow.querySelector("h4").firstElementChild;
 
     charName.innerText = characterObj.name;
     charImage.src = characterObj.image;
@@ -38,12 +39,16 @@ caloriesForm.addEventListener("submit", (evt) => {
   updateCalories(evt);
 });
 
+resetButton.addEventListener("click", (evt) => {
+  resetCalories(evt);
+});
+
 const updateCalories = (evt) => {
   let formValue = evt.target.firstElementChild.value;
   let calorieValue = evt.target.children[1].value;
   const charCalories = evt.target.closest("div").querySelector("span");
-  let addingCalories = parseInt(charCalories.innerText) + parseInt(calorieValue);
-  debugger;
+  let addingCalories =
+    parseInt(charCalories.innerText) + parseInt(calorieValue);
 
   fetch("http://localhost:3000/characters/" + formValue, {
     method: "PATCH",
@@ -57,3 +62,20 @@ const updateCalories = (evt) => {
     });
   evt.target.reset();
 };
+
+const resetCalories = (evt) => {
+  let zeroCalorie = caloriesForm.firstElementChild.value;
+  const charCalories = evt.target.closest("div").querySelector("span");
+
+  fetch("http://localhost:3000/characters/" + zeroCalorie, {
+    method: "PATCH",
+    credentials: "include",
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    body: JSON.stringify({ calories: "0" }),
+  })
+    .then((response) => response.json())
+    .then((updatedCharacter) => {
+      charCalories.innerText = updatedCharacter.calories;
+    });
+};
+
