@@ -8,6 +8,8 @@ const characterNameBar = document.querySelector("#character-bar")
 const charactersNameInfoInMain = document.querySelector("#name")
 const charactersImageInfoInMain = document.querySelector("#image")
 const characterCurrentCalories = document.querySelector("#calories")
+const characterCalories = document.querySelector("#calories-form")
+const charactersIdForCalories = document.querySelector("#characterId")
 
 fetch("http://localhost:3000/characters")
   .then (resp => resp.json())
@@ -30,6 +32,35 @@ turnCharacterIntoHTML = (singleCharacter) =>{
       charactersNameInfoInMain.innerHTML = singleCharacter.name
       characterCurrentCalories.innerHTML = singleCharacter.calories
       charactersImageInfoInMain.src = singleCharacter.image
+    })
+
+    //Deliverable 3
+    //Clicks on "Add Calories" button to add calories to a Character.
+    //Persist calories value to the server and update the DOM.
+
+
+    characterCalories.addEventListener("submit", (evt) =>{
+      charactersIdForCalories.innerHTML = singleCharacter.id
+      let enteredCalorie = document.querySelector("#enteredCalories")
+      singleCharacter.calories += parseFloat(evt.target["enteredCalories"].value)
+      evt.preventDefault()
+
+      fetch(`http://localhost:3000/characters/${singleCharacter.id}`,{
+        method:"PATCH",
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'Application/json'
+        },
+        body: JSON.stringify({
+          calories: singleCharacter.calories
+        })
+      })
+      .then(resp => resp.json())
+      .then(characterCurrentCalories.innerHTML += parseFloat(singleCharacter.calories))
 
     })
+
+
+
+
 }
