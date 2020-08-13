@@ -11,16 +11,22 @@ const charForm = document.querySelector("form#calories-form");
     const formInput = document.querySelector("input#characterId");
     const userInput = document.querySelector("input").nextElementSibling
         userInput.name = "calorie"
-       
+   
 recieveCharacters()
+
+const charObjs = []
+// console.log("this is ", charObjs);
 
 function recieveCharacters(){
     fetch('http://localhost:3000/characters')
         .then(response => response.json())
         .then((characters) => {
             characters.forEach((character) => {
+                charObjs.push(character)
                 renderCharacter(character)
+
             })
+            
             renderCharInfo(characters[0])
         })
 } 
@@ -48,17 +54,29 @@ function renderCharInfo(charObj){
 charForm.addEventListener("submit",function(evt){
     evt.preventDefault()
     // console.log(this.userInput.value);
-    let calInput = this.calorie.value
+  
+    let calInput = parseInt(this.calorie.value)
     let charId = this.characterId.value
+
+  
+   let objChar = charObjs.find((obj) => {
+           return obj.id === parseInt(charId)
+        })
+// debugger
+    let newCal = calInput += parseInt(objChar["calories"])
+    console.log(newCal);
+    console.log(objChar);
+   
     fetch(`http://localhost:3000/characters/${charId}`, {
         method: 'PATCH',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify ({
-            calories: calInput
+            calories: newCal
         })
     })
     .then(response => response.json())
     .then((updatedChar) => {
+        charForm.reset()
         renderCharInfo(updatedChar);
     })
 })
