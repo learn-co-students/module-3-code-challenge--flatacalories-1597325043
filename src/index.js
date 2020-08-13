@@ -80,3 +80,34 @@ charForm.addEventListener("submit",function(evt){
         renderCharInfo(updatedChar);
     })
 })
+
+
+// Clicks on a Reset Calories button to set calories to 0. Persist calories value to the server and update the DOM.
+
+const resetButt = document.querySelector("#reset-btn");
+
+resetButt.addEventListener("click", function(evt) {
+    console.log(this.closest('div'));
+    let calInput = parseInt(this.calorie.value)
+    let charId = this.characterId.value
+
+  
+   let objChar = charObjs.find((obj) => {
+           return obj.id === parseInt(charId)
+        })
+// debugger
+    let newCal = 0
+   
+    fetch(`http://localhost:3000/characters/${charId}`, {
+        method: 'PATCH',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify ({
+            calories: newCal
+        })
+    })
+    .then(response => response.json())
+    .then((updatedChar) => {
+        charForm.reset()
+        renderCharInfo(updatedChar);
+    })
+})
