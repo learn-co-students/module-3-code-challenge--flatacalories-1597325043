@@ -12,6 +12,13 @@
         <div id = "character-bar">
             <!-- show characters names here -->
         </div>
+
+        <form id="new-character-form">
+            <input type="text" id="new-name" placeholder="Enter character name..."/>
+            <input type="text" id="new-img" placeholder="Enter character image..."/>
+            <input type="number" id="new-calories"  placeholder="Enter character calories... "/>
+            <input type="submit" value="Add New Character"/>
+        </form>
         
         <div class = "characterInfo">
             <div id="detailed-info">
@@ -23,7 +30,15 @@
                     <input type="text" placeholder="Enter Calories"/>
                     <input type="submit" value="Add Calories"/>
                 </form>
+
+                <form id="name-form" hidden>
+                    <input type="text" placeholder="Enter New Name"/>
+                    <input type="submit" value="Change Name"/>
+                </form>
+
                 <button id="reset-btn">Reset Calories</button>
+                <button id="change-name-btn">Change Name</button>
+                
             </div>
         </div>
         
